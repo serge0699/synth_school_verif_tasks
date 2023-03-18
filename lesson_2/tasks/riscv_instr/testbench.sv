@@ -4,6 +4,10 @@ module testbench;
 
     riscv_instr instr;
 
+    // TODO: check instructions
+    // 
+    // Example for SRAI:
+
     initial begin
         bit valid;
         instr = new(SRAI);
@@ -13,6 +17,10 @@ module testbench;
             instr.print();
         end
     end
+
+    //                   ^
+    //                   |    
+    // TODO: Write the same blocks for some instructions
 
 
 endmodule
