@@ -12,7 +12,7 @@ class generator;
 
 
     // TODO: create virtual 'run()' task
-    // Task must call 'collect()' 'conf.amount' times
+    // Task must call 'gen()' 'conf.amount' times
     // Use 'repeat'
 
 
