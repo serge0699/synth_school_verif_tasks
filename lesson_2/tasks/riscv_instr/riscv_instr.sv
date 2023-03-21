@@ -1,5 +1,8 @@
 // This variable define some RISC-V instructions
 
+// TODO: add BEQ instruction and take this instruction
+//       into account in constraints
+
 typedef enum { 
     ADDI,
     SLTI,
@@ -12,6 +15,7 @@ typedef enum {
     SRAI
 } riscv_instr_name_e;
 
+
 // Main instruction class
 
 class riscv_instr;
@@ -23,54 +27,61 @@ class riscv_instr;
     // 
     // Example: rand bit [ 6:0] opcode;
 
-    // There must be 'opcode', 'rd', 'funct3', 'rs1', 'imm'
+    // There must be 'opcode', 'rd', 'funct3', 'rs1', 'rs2', 'imm'
+
+
+    // TODO: Create full instruction binary with type 'rand bit'
+    //       and name 'binary'
 
 
     // Instruction name
 
-    riscv_instr_name_e name;
-
-    function new(riscv_instr_name_e name);
-        this.name = name;
-    endfunction
-
-    // TODO: write 'opcode' constraint
-    //       'opcode' must be 7'b0010011 for defined instructions
+    rand riscv_instr_name_e name;
 
 
-    // TODO: write 'rd' constraint
+    // TODO: Write 'opcode' constraint
+    //       'opcode' must be 7'b0010011 for all defined instructions,
+    //       except BEQ (find BEQ opcode in specification)
+
+
+    // TODO: Write 'rd' constraint
     //       Can it be empty?
 
 
-    // funct3 constraint, NOTE: this constraint uses function
+    // TODO: Extend 'funct3' constraint with all
+    //       instruction names from 'riscv_instr_name_e'
 
-    constraint funct3_c { funct3 == get_funct3(); }
+    constraint funct3_c { 
+        name == ADDI  -> funct3 == 3'b000;
+        name == SLTI  -> funct3 == 3'b010;
+    }
 
-    // rs1 constraint, can be empty as all values are legal
+
+    // 'rs1' constraint, can be empty as all values are legal
 
     constraint rs1_c { }
 
-    // TODO: write 'imm' constraint, use functions encodings
+
+    // TODO: Write 'rs2' constraint
+    //       Can it be empty?
 
 
-    // TODO: extend case in this function
+    // TODO: Write 'imm' constraint, use functions encodings
 
-    virtual function bit [2:0] get_funct3();
-        bit [2:0] funct3;
-        case(name)
-            ADDI   : funct3 = 3'b000;
-            SLTI   : funct3 = 3'b010;
-            // Check all cases here
-            default: $display("Invalid name %s", name.name());
-        endcase
-        return funct3;
-    endfunction
 
-    // print instruction
+    // TODO: Write 'binary' constraint, use fields concatenation
+
+
+    // Print instruction
 
     virtual function void print();
-        $display("Name: %s\n opcode: %7b\n rd: %5b\n funct3: %3b\n rs1: %5b\n imm: %12b",
-            name.name(), opcode, rd, funct3, rs1, imm);
+        $display("----------------------------------------");
+        $display(
+            string'({" name  : %s\n opcode: %7b\n rd    : %5b\n funct3: %3b\n ",
+                "rs1   : %5b\n rs2   : %5b\n imm   : %12b\n binary: %31b"}),
+                    name.name(), opcode, rd, funct3, rs1, rs2, imm, binary
+        );
+        $display("----------------------------------------\n");
     endfunction
 
 endclass
