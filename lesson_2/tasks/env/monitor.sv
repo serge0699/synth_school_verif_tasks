@@ -18,12 +18,6 @@ class monitor;
     // Every posedge of 'vif.clk' task must call 'collect()'
     // Use 'forever' loop
 
-    virtual task run();
-        forever begin
-            @(posedge vif.clk);
-            collect();
-        end
-    endtask
 
     // This task will get transaction from the interface
     // and pass transaction on the mailbox

@@ -1,8 +1,9 @@
+`include "interface.sv"
+
 module testbench();
 
     // Package can be used here
 
-    `include "interface.sv"
     `include "cfg.sv"
     `include "transaction.sv"
     `include "driver.sv"
