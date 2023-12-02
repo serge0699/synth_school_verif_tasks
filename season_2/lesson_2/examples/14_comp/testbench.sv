@@ -37,17 +37,17 @@ module testbench;
 
     // Генерация входных сигналов
     initial begin
-        logic [31:0] A_t, B_t;
+        logic [7:0] A_t, B_t;
         wait(aresetn);
         repeat(100) begin
             @(posedge clk);
-            void'(std::randomize(A_t, B_t) with {A_t > B_t;});
+            void'(std::randomize(A_t, B_t) with {A_t < B_t;});
             A <= A_t;
             B <= B_t;
         end
         repeat(100) begin
             @(posedge clk);
-            void'(std::randomize(A_t, B_t) with {A_t < B_t;});
+            void'(std::randomize(A_t, B_t) with {A_t > B_t;});
             A <= A_t;
             B <= B_t;
         end
