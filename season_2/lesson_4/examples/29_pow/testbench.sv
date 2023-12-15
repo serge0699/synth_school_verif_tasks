@@ -51,12 +51,12 @@ module testbench;
     parameter CLK_PERIOD = 10;
 
     // Пакет и mailbox'ы
-    typedef struct {
+    class packet;
         rand int          delay;
         rand logic [31:0] tdata;
         rand logic        tid;
         rand logic        tlast;
-    } packet;
+    endclass
 
     mailbox#(packet) gen2drv = new();
     mailbox#(packet) in_mbx  = new();
@@ -92,7 +92,8 @@ module testbench;
         int size;
         void'(std::randomize(size) with {size inside {[size_min:size_max]};});
         for(int i = 0; i < size; i = i + 1) begin
-            if( !std::randomize(p) with {
+            p = new();
+            if( !p.randomize() with {
                 p.delay inside {[delay_min:delay_max]};
                 p.tlast == (i == size - 1);
             } ) begin
@@ -157,6 +158,7 @@ module testbench;
         packet p;
         @(posedge clk);
         if( s_tvalid & s_tready ) begin
+            p = new();
             p.tdata  = s_tdata;
             p.tid    = s_tid;
             p.tlast  = s_tlast;
@@ -232,6 +234,7 @@ module testbench;
         packet p;
         @(posedge clk);
         if( m_tvalid & m_tready ) begin
+            p = new();
             p.tdata  = m_tdata;
             p.tid    = m_tid;
             p.tlast  = m_tlast;
