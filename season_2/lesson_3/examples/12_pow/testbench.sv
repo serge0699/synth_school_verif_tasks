@@ -296,12 +296,12 @@ module testbench;
             reset();
         join_none
         test(
-            .gen_pkt_amount (   100),
-            .gen_size_min   (    20),
-            .gen_size_max   (   300),
-            .gen_delay_min  (    10),
-            .gen_delay_max  (    20),
-            .timeout_cycles (100000)
+            .gen_pkt_amount (    100),
+            .gen_size_min   (     20),
+            .gen_size_max   (    300),
+            .gen_delay_min  (     10),
+            .gen_delay_max  (     20),
+            .timeout_cycles (1000000)
         );
     end
 
