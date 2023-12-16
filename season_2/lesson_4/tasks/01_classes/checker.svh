@@ -157,7 +157,7 @@ initial begin
             foreach(cl_4.data[i]) begin
                 if(cl_4.data[i] inside {data_queue}) begin
                     $error("my_class_4.size != 3, but my_class_4.data[%0d] is not unique", i);
-                    $display("my_class_4.data[%0d] = %0d", i, cl_4.data[i]);
+                    $display("my_class_4.data = %p", cl_4.data);
                 end
                 data_queue.push_back(cl_4.data[i]);
             end
