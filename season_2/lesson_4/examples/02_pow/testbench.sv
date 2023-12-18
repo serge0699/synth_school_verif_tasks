@@ -70,7 +70,7 @@ module testbench;
     // Генерация сигнала сброса
     task reset();
         aresetn <= 0;
-        #(CLK_PERIOD);
+        #(10*CLK_PERIOD);
         aresetn <= 1;
     endtask
 
@@ -116,11 +116,9 @@ module testbench;
     endtask
 
     task reset_master();
-        wait(~aresetn);
         s_tvalid <= 0;
         s_tdata  <= 0;
         s_tid    <= 0;
-        wait(aresetn);
     endtask
 
     task drive_master(packet p);
@@ -139,7 +137,6 @@ module testbench;
 
     task do_master_drive();
         packet p;
-        reset_master();
         forever begin
             @(posedge clk);
             fork
@@ -148,8 +145,10 @@ module testbench;
                     drive_master(p);
                 end
             join_none
-            reset_master();
+            wait(~aresetn);
             disable fork;
+            reset_master();
+            wait(aresetn);
         end
     endtask
 
@@ -194,9 +193,7 @@ module testbench;
 
     // Slave
     task reset_slave();
-        wait(~aresetn);
         m_tready <= 0;
-        wait(aresetn);
     endtask
 
     task drive_slave(
@@ -215,7 +212,6 @@ module testbench;
         int delay_min  = 0,
         int delay_max  = 10
     );
-        reset_slave();
         forever begin
             @(posedge clk);
             fork
@@ -223,8 +219,10 @@ module testbench;
                     drive_slave(delay_min, delay_max);
                 end
             join_none
-            reset_slave();
+            wait(~aresetn);
             disable fork;
+            reset_slave();
+            wait(aresetn);
         end
     endtask
 
