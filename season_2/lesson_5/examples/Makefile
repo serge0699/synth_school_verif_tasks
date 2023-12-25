@@ -1,3 +1,42 @@
+##-----------------------------------------------------------------------
+##
+## This is common examples/tasks Makefile.
+##
+## You can run concrete example/task from directory of this Makefile via:
+##   make EXAMPLE=<example-directory>
+##
+## Available arguments:
+##   * EXAMPLE - example directory
+##   * SIM_OPTS - simulation options, default is '-c'
+##   * TOP - top module for simulation, default is 'testbench'
+##   * OUT - simulation logs directory, default is '$(EXAMPLE)/out'
+##   * WAVES - waveform save enable, default is '1'
+##   ------------------------------------------------------------
+##   --- lower arguments is only for package-based testbench  ---
+##   ------------------------------------------------------------
+##   * WITH_PKG - if example uses package - set this to '1',
+##                default is '0'
+##   * DUT - design under test name if example uses package,
+##           default is 'pow'
+##   * INTF - interface name if example uses package,
+##            default is 'axis_intf'
+##
+## Examples:
+##
+##   * Run example 02_sum with GUI
+##     | make EXAMPLE=02_sim SIM_OPTS=-gui
+##
+##   * Run example 03_sum with GUI with randomization seed 12345
+##     | make EXAMPLE=03_sim SIM_OPTS="-gui -sv_seed 12345"
+##
+##   * Run example 10_initial with GUI with no waveform saving
+##     | make EXAMPLE=10_initial SIM_OPTS=-gui WAVES=0
+##
+##   * Run example 12_pow with GUI and package mode
+##     | make EXAMPLE=12_pow SIM_OPTS=-gui WITH_PKG=1
+##     
+##-----------------------------------------------------------------------
+
 # Example select
 EXAMPLE = 01_sum
 
@@ -91,3 +130,5 @@ endif
 # Output directory target
 $(OUT):
 	@mkdir -p $@
+
+include ../../common/make_help.mk
