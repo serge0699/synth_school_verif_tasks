@@ -20,6 +20,9 @@
 ##           default is 'pow'
 ##   * INTF - interface name if example uses package,
 ##            default is 'axis_intf'
+##   * EXAMPLE_REUSE - set to another example folder, if you want
+##                     to reuse sources from that example,
+##                     default is ''
 ##
 ## Examples:
 ##
@@ -34,11 +37,19 @@
 ##
 ##   * Run example 12_pow with GUI and package mode
 ##     | make EXAMPLE=12_pow SIM_OPTS=-gui WITH_PKG=1
+##
+##   * Run example 13_complex in package mode with usage of
+##     sources from example 12_pow and with DUT name 'complex'
+##     | make EXAMPLE=13_complex WITH_PKG=1 EXAMPLE_REUSE=12_pow \
+##     | SIM_OPTS=-gui DUT=complex
 ##     
 ##-----------------------------------------------------------------------
 
 # Example select
 EXAMPLE = 01_sum
+
+# Example code reuse select
+EXAMPLE_REUSE =
 
 # Top simulation module select
 TOP = testbench
@@ -73,16 +84,24 @@ COMP_OPTS =
 SIM_OPTS = -c
 ifneq ($(WITH_PKG),0)
 	SIM_OPTS += +incdir=$(EXAMPLE) -permit_unmatched_virtual_intf
+	ifneq ($(EXAMPLE_REUSE),)
+		SIM_OPTS += +incdir=$(EXAMPLE_REUSE)
+	endif
 endif
 
 # Compile Verilog / SystemVerilog files from example directory
 ifeq ($(WITH_PKG),0)
 	VERILOG = $(shell find $(EXAMPLE)/ -name "*.*v")
 else
-	VERILOG =  $(shell find $(EXAMPLE)/ -name "*_pkg.*v")
+	ifneq ($(EXAMPLE_REUSE),)
+		VERILOG += $(shell find $(EXAMPLE_REUSE)/ -name "*_pkg.*v")
+		VERILOG += $(EXAMPLE_REUSE)/$(INTF).sv
+	else
+		VERILOG += $(EXAMPLE)/$(INTF).sv
+	endif
+	VERILOG += $(shell find $(EXAMPLE)/ -name "*_pkg.*v")
 	VERILOG += $(EXAMPLE)/$(DUT).sv
 	VERILOG += $(EXAMPLE)/$(TOP).sv
-	VERILOG += $(EXAMPLE)/$(INTF).sv
 endif
 
 # All Verilog / SystemVerilog files from example directory

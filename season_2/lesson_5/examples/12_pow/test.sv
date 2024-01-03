@@ -60,7 +60,7 @@
         endtask
 
         // Сброс проверки
-        task reset_checker();
+        virtual task reset_checker();
             forever begin
                 wait(~vif_master.aresetn);
                 env.check.in_reset = 1;
