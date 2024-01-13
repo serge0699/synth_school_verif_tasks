@@ -52,8 +52,12 @@ module testbench;
 
     // Покрытие
     covergroup sum_cg @(posedge clk);
-        a_cp: coverpoint a;
-        b_cp: coverpoint b;
+        a_cp: coverpoint a {
+            bins b1 [] = {[0:255]};
+        }
+        b_cp: coverpoint a {
+            bins b1 [] = {[0:255]};
+        }
     endgroup
 
     sum_cg   cg;
