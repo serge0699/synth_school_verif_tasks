@@ -53,14 +53,14 @@ module testbench;
     // Покрытие
     covergroup sum_cg @(posedge clk);
         a_cp: coverpoint a {
-            bins b1 [] = {1,2,3} with {
-                is_odd(item);
-            };
+            bins b1 [] = {1,2,3} with (
+                is_odd(item)
+            );
         }
     endgroup
 
-    function bit is_odd();
-        return {1, 2, 3};
+    function bit is_odd(logic [7:0] a);
+        return a[0];
     endfunction
 
     sum_cg   cg;
