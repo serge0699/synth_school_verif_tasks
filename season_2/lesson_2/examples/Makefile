@@ -51,8 +51,15 @@ COMP_OPTS =
 # Simulation options
 SIM_OPTS = -c
 
+# Extension postfix
+# This option will allow us to simulate custom extensions
+EXT_POSTFIX = 
+
 # All Verilog / SystemVerilog files from example directory
 VERILOG = $(shell find $(EXAMPLE)/ -name "*.*v")
+
+# All custom extensions files
+VERILOG += $(shell find $(EXAMPLE)/ -name "*.$(EXT_POSTFIX)")
 
 # Verbosity
 v = @
