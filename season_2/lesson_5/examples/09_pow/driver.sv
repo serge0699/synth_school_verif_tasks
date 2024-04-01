@@ -31,7 +31,7 @@
             repeat(p.delay) @(posedge clk);
             s_tvalid <= 1;
             s_tdata  <= p.tdata;
-            s_tid    <= p.tdata;
+            s_tid    <= p.tid;
             s_tlast  <= p.tlast;
             do begin
                 @(posedge clk);
