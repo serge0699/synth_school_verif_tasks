@@ -11,6 +11,7 @@
 ##   * TOP - top module for simulation, default is 'testbench'
 ##   * OUT - simulation logs directory, default is '$(EXAMPLE)/out'
 ##   * WAVES - waveform save enable, default is '1'
+##   * EXT_POSTFIX - additional extension to compile
 ##
 ## Examples:
 ##
@@ -22,6 +23,11 @@
 ##
 ##   * Run example 10_initial with GUI with no waveform saving
 ##     | make EXAMPLE=10_initial SIM_OPTS=-gui WAVES=0
+##
+##   * Run example 06_alu with GUI and .svp files compile and
+##     passing define VERSION_4 to the compilation
+##     | make EXAMPLE=06_alu SIM_OPTS=-gui COMP_OPTS=+define+VERSION_4 \
+##     |   EXT_POSTFIX=svp
 ##     
 ##-----------------------------------------------------------------------
 
@@ -51,8 +57,15 @@ COMP_OPTS =
 # Simulation options
 SIM_OPTS = -c
 
+# Extension postfix
+# This option will allow us to simulate custom extensions
+EXT_POSTFIX = none
+
 # All Verilog / SystemVerilog files from example directory
 VERILOG = $(shell find $(EXAMPLE)/ -name "*.*v")
+
+# All custom extensions files
+VERILOG += $(shell find $(EXAMPLE)/ -name "*.$(EXT_POSTFIX)")
 
 # Verbosity
 v = @
@@ -62,7 +75,7 @@ v = @
 # Run target
 run: $(OUT)/compile.stamp
 	@echo "Running $(EXAMPLE) (log file at $(OUT)/sim.log) ..."
-	$(v)vsim $(SIM_OPTS) work.$(TOP) -work $(OUT)/work -do questa.tcl \
+	$(v)vsim $(SIM_OPTS) work.$(TOP) -do questa.tcl \
 		-voptargs="+acc" -l $(OUT)/sim.log -wlf $(OUT)/sim.wlf > $(OUT)/sim.log
 
 # Clean target
@@ -85,13 +98,26 @@ clean_all:
 
 # Compile target
 ifneq ($(VERILOG),) # Guard on compilation only from existing example
-$(OUT)/compile.stamp: $(VERILOG) | $(OUT)
+$(OUT)/compile.stamp: $(VERILOG) $(OUT)/EXT_POSTFIX.$(EXT_POSTFIX) \
+	$(OUT)/COMP_OPTS.$(subst /,,$(COMP_OPTS)) | $(OUT)
 	@echo "Compiling $(EXAMPLE) (log file at $(OUT)/compile.log) ..."
 	$(v)vlib $(OUT)/work > $(OUT)/compile.log
 	$(v)vmap work $(OUT)/work >> $(OUT)/compile.log
 	$(v)vlog -sv $(COMP_OPTS) -work work $(VERILOG) >> $(OUT)/compile.log
 	@touch $@
 endif
+
+# Compilation options target
+# Because we depend on this variable for compilation
+$(OUT)/COMP_OPTS.$(subst /,,$(COMP_OPTS)): | $(OUT)
+	$(v)rm -f $(OUT)/COMP_OPTS.*
+	@touch $@
+
+# Extension postfix target
+# Because we depend on this variable for compilation
+$(OUT)/EXT_POSTFIX.$(EXT_POSTFIX): | $(OUT)
+	$(v)rm -f $(OUT)/EXT_POSTFIX.*
+	@touch $@
 
 # Output directory target
 $(OUT):
