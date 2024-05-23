@@ -150,18 +150,22 @@ module testbench;
     endtask
 
     // Проверка
-    task check(packet in, packet out);
-        if( in.tid !== out.tid ) begin
+    task check();
+        packet in_p, out_p;
+        in_mbx.get(in_p);
+        out_mbx.get(out_p);
+        if( in_p.tid !== out_p.tid ) begin
             $error("%0t Invalid TID: Real: %h, Expected: %h",
-                $time(), out.tid, in.tid);
+                $time(), out_p.tid, in_p.tid);
         end
-        if( out.tdata !== in.tdata ** 5 ) begin
+        if( out_p.tdata !== in_p.tdata ** 5 ) begin
             $error("%0t Invalid TDATA: Real: %0d, Expected: %0d ^ 5 = %0d",
-                $time(), out.tdata, in.tdata, in.tdata ** 5);
+                $time(), out_p.tdata, in_p.tdata, in_p.tdata ** 5);
         end
-        if( in.tlast !== out.tlast ) begin
+
+        if( in_p.tlast !== out_p.tlast ) begin
             $error("%0t Invalid TLAST: Real: %1b, Expected: %1b",
-                $time(), out.tlast, in.tlast);
+                $time(), out_p.tlast, in_p.tlast);
         end
     endtask
 
