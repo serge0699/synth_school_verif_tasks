@@ -44,11 +44,6 @@ end
 
 initial begin
 
-    // tlast counter
-    int tlast_cnt;
-    // tlast indicator
-    bit tlast_ind;
-
     // Data queue for unique check
     bit [7:0] data_queue [$];
 
@@ -203,16 +198,18 @@ initial begin
             $error("my_class_6.tlast size is not divisible by 8");
             $display("my_class_6.tlast.size() = %0d", cl_6.tlast.size());
         end
-        foreach(cl_6.tlast[i]) begin
+        for(int i = 0; i < cl_6.tlast.size(); i = i + 1) begin
             if(cl_6.tlast[i]) begin
-                if(tlast_cnt < 3 && tlast_ind) begin
-                    $error("my_class_6.tlast is 1 but only %0d tlasts were 0 before last 1", tlast_cnt);
-                    $display("my_class_6.tlast = %p", cl_6.tlast);
+                for(int j = 1; j < 4; j = j + 1) begin
+                    if(i + j > cl_6.tlast.size()) break;
+                    if(cl_6.tlast[i + j]) begin
+                        $error("my_class_6.tlast is 1 but only %0d tlasts were 0 before last 1", (i + j - 1) - i);
+                        $display("my_class_6.tlast = %p", cl_6.tlast);
+                    end
                 end
-                tlast_ind = 1;
-                tlast_cnt = 0;
+                // Increment i by 3 because we checked next 3 tlast already
+                i = i + 3;
             end
-            else tlast_cnt = tlast_cnt + 1;
         end
     end
         
@@ -220,4 +217,3 @@ initial begin
     $finish();
         
 end
-
