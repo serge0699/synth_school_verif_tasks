@@ -48,7 +48,7 @@ EXAMPLE_DIR = $(PWD)/$(EXAMPLE)
 export EXAMPLE_DIR
 
 # Temporary directories and files
-TEMP_DIRS   = $(shell find -maxdepth 2 -path "./*/*" -type d)
+TEMP_DIRS   = $(shell find -maxdepth 2 -path "./*/*" -not -path "./*/dv" -not -path "./*/rtl" -type d)
 TEMP_FILES  = $(shell find -mindepth 2 ! -wholename "*/*.*v" -not -path "./*/*" -type f)
 TEMP_FILES += $(shell find -name "*.ini" -type f)
 

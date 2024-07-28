@@ -9,7 +9,7 @@ module testbench;
     base1 b1; // Handle
 
     initial begin
-        $display(b1);
+        $display(b1); // null
     end
 
 endmodule

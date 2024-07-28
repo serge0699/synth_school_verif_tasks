@@ -58,6 +58,10 @@ module testbench;
         rand logic        tlast;
     endclass
 
+    class small_data_packet extends packet;
+        constraint tdata_c {tdata inside {[0:256]};}
+    endclass
+
     mailbox#(packet) gen2drv = new();
     mailbox#(packet) in_mbx  = new();
     mailbox#(packet) out_mbx = new();

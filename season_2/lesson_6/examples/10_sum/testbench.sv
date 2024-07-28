@@ -55,7 +55,7 @@ module testbench;
         a_cp: coverpoint a {
             bins b1 = (1 => 3);
             bins b2 = (1 => 3 => 4);
-            bins b2 = (1 => 4);
+            bins b3 = (1 => 4);
         }
     endgroup
 
