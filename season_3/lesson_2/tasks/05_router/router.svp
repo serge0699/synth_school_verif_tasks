@@ -1,0 +1,65 @@
+module router /* (
+    input  logic             clk,
+    input  logic             aresetn,
+    input  logic  [3:0][1:0] sel,
+    input  logic       [3:0] in,
+    output logic       [3:0] out
+); */
+
+/*
+    Описание работы устройства.
+
+    Роутер маршрутизирует данные со входов ~in~ на выходы ~out~. Сигнал
+    ~sel~ отвечает за настройку маршрутизации.
+
+    Каждому биту входа ~in~ соответствует одно из четырех значений ~sel~:
+
+    | sel [0][1:0]  |  sel [1][1:0]  |  sel [2][1:0]  |  sel [3][1:0] |
+            |                |                |                |
+          in[0]            in[1]            in[2]            in[3]
+
+    Иными словами, вход ~in[n]~ отправлется на такой выход ~out[m]~,
+    который указан в управляющем сигнале ~sel[n]~. Возникает нюанс
+    с приоретизацией. Если ~sel[n]~ и ~sel[m]~ равны одинаковому
+    номеру выхода, то на сответствующий выход отправляется вход
+    с меньшим номером. То есть, если n > m, то на выход попадет
+    ~in[m]~, иначе ~in[n]~. Также, если ни один из входов не назначен
+    выходу, то на выход отправляется 0.
+
+    Рефересный алгоритм для out[0]:
+
+          Если sel [0][1:0] равен 0, то out[0] <= in[0],
+    иначе если sel [1][1:0] равен 0, то out[0] <= in[1],
+    иначе если sel [2][1:0] равен 0, то out[0] <= in[2],
+    иначе если sel [3][1:0] равен 0, то out[0] <= in[3],
+    иначе                               out[0] <= 0.
+
+    Рефересный алгоритм для out[1]:
+
+          Если sel [0][1:0] равен 1, то out[1] <= in[0],
+    иначе если sel [1][1:0] равен 1, то out[1] <= in[1],
+    иначе если sel [2][1:0] равен 1, то out[1] <= in[2],
+    иначе если sel [3][1:0] равен 1, то out[1] <= in[3],
+    иначе                               out[1] <= 0.
+
+    ...
+
+    и так далее до out[3].
+*/
+
+`protected
+    MTI!#!}^E^{Cis)DM?so-y#j=C2so,sI57$r?asI>[8Q-bqLIkEuCK,i$>]K3H7CI=o2%KRpA~js
+    J]Vm@e;;zVX~G%+'n]HwU$HDXK[5Op|h3w]s]C{RGI2IrATpm<$\B,-,I7(\Ys$5&u{=_kNF\:;$
+    eB!sIE*jK17x_~}o{,EVvI*CJ[=?${OOx{[?Qih^B@<ERGX:El$DN%>_AO!OE3QGulYu=r_-[[{{
+    7?-52TA11>x5B37~5j=+7w_*sGGUe[j5O3\!pX1_i=Y-Y3+5s_q-+xOBC?]@$wU>';a*D3~[^^#U
+    I!Y=;_J$~}>BH^XE5#I7=,;~Ae}Y;{aA7v#mn$\L"a+3Q1ACs|s-_}?=eG_tjim^\u-A|BmZm=WG
+    U{=?RxV~n1iaOre={]+}mg><-[wTY]G@}k=+l5]<([s^AemTl'O7R]s?;^r'[53H=<OKRB3^'.Ko
+    ]G{$R?;=VT}#5@2U<-N~9l<fGLR@D>fpf$#Cu7^@WK-CaQXQw}l?;-^$u*lK-5ArJ2a=oIoWQC3G
+    uOroWT+BZH-3u(,\m=D@;C4Bk5WIBQ$;=B~*'jUBQ6JaJ%v&Tnn2D<n7Kr3@]keT,*UuCr^iBB>I
+    $XmGKR;Il'5+!{\}*wn5^KGp_o??mTvGB}nv+'-ViBIK[^xzQDr_OJp'DV*OrAZpI~WQ!-~CGmAV
+    \u,{UXDnzV@$~1<v'Wrk=WlZY"vio[O}Dr*_W;^QHlIGTUNT*$Qv!-T%q2-rvi^\n*P2=UAK>ZUn
+    xI'OQ$a:*1l1[CxQTHU<@zWRDYH#,@j_fvGI[f{'Wx5O!$YX-?=\\eapDn_jHUsBdx7_!.0klATu
+    YT<Yu*A2_j$%]TGH'JKT@AR#THRYcWRu'z1DCxX{Q,s#*2_D[Y\sid^YOCqx\EIC3x{}=-[8zD?v
+    [a'Q
+`endprotected
+endmodule

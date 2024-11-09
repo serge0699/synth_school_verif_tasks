@@ -1,0 +1,16 @@
+    assign i_imm_w = { { ( 21 ){ instr[31] } }, instr[30:20] };
+    assign s_imm_w = { { ( 21 ){ instr[31] } }, instr[30:25], instr[11:8],  instr[7] };
+    assign b_imm_w = { { ( 20 ){ instr[31] } }, instr[7], instr[30:25], instr[11:8],  1'b0 };
+    assign u_imm_w = { instr[31:12], { ( 12 ){ 1'b0 } } };
+    assign j_imm_w = { { ( 20 ){ instr[31] } }, instr[19:12], instr[20], instr[30:21], 1'b0 };
+
+    assign i_imm_w = { { ( 20 ){ instr[31] } }, instr[30:20] };
+    assign s_imm_w = { { ( 20 ){ instr[31] } }, instr[7], instr[30:25], instr[11:8],  1'b0 };
+    assign b_imm_w = { { ( 21 ){ instr[31] } }, instr[30:25], instr[11:8],  instr[7] };
+    assign u_imm_w = { instr[31:12], { ( 11 ){ 1'b0 } } };
+    assign j_imm_w = { { ( 20 ){ instr[31] } }, instr[19:12], instr[20], instr[24:21], 1'b0 };
+
+    Количество верхних бит в i_imm должно быть равно 21
+    Количество нижних нулей в u_imm должно быть равно 12
+    У j_imm пропущено instr[31:25]
+    s_imm и b_imm перепутаны местами
