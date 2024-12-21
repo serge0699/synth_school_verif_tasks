@@ -1,0 +1,252 @@
+/*
+    Описание работы устройства.
+
+    ALU выполняет арифметические операции над числами.
+
+    Входной интерфейс: AXI-Stream (s_tvalid, s_tready, s_tdata, s_tid).
+    Выходной интерфейс: AXI-Stream (m_tvalid, m_tready, m_tdata, m_tid).
+
+    Над двумя подряд идущими операндами с одинаковым ID происходит
+    выполнение операции, которая определяется ID:
+        - tid = 0 : tdata_1  + tdata_2
+        - tid = 1 : tdata_1  - tdata_2
+        - tid = 2 : tdata_1  * tdata_2
+        - tid = 3 : tdata_1 << tdata_2
+    где tdata_1 - первые полученные модулем данные, tdata_2 - вторые
+    полученные модулем данные.
+
+    ID результата выполнения операции соответствует ID, который
+    определяет эту операцию.
+
+    Временная диаграмма работы:
+
+                          1           2       3       4
+                   _   _  |_   _   _  |_   _  |_   _  |_
+        clk      |  |_| |_| |_| |_| |_| |_| |_| |_| |_| |_
+                       ___|    _______|    ___|       |
+        s_tvalid | ___|   |___|       |___|   |_______|___
+                       ___|        ___|    ___|       |
+        s_tready | ___|   |_______|   |___|   |_______|___
+                          |           |       |       |
+        s_tdata  | XXX| 5 |XXX|   7   |XXX| 3 |XXXXXXX|XXX
+                                      |       |       |
+        s_tid    | XXX| 1 |XXX|   2   |XXX| 2 |XXXXXXX|XXX
+                          |           |       |    ___|
+        m_tvalid | _______|___________|_______|___|   |___
+                       _  |      _    |  _    |    ___|
+        m_tready | ___| |_|_____| |___|_| |___|___|   |___
+                                      |       |       |
+        m_tdata  | XXXXXXXXXXXXXXXXXXX|XXXXXXX|XXX| 4 |XXX
+                                      |       |       |
+        m_tid    | XXXXXXXXXXXXXXXXXXX|XXXXXXX|XXX| 2 |XXX
+
+        В момент времени 1 происходит передача данных со значением
+        5 с ID операции 1. В момент времени 2 происходит передача
+        данных 7 и ID операции 2. Т.к. ID двух подряд идущих операндов
+        не совпадают, тоо результат операции не будет вычислен и
+        отправлен на выходной AXI-Stream (префикс m_). В момент
+        времени 3 происходит передача данных 4 и ID операции 2. Т.к.
+        ID двух подряд идущих операндов совпадают, то результат будет
+        вычислен и отправлен через некоторый промежуток времени
+        (в данном примере в момент времени 4).
+
+*/
+
+`ifdef VERSION_1
+module alu (
+
+    input logic        clk,
+    input logic        aresetn,
+
+    // AXI-Stream на вход
+    input  logic        s_tvalid,
+    output logic        s_tready,
+    input  logic [31:0] s_tdata,
+    input  logic [ 1:0] s_tid,
+
+    // AXI-Stream на выход
+    output logic        m_tvalid,
+    input  logic        m_tready,
+    output logic [31:0] m_tdata,
+    output logic [ 1:0] m_tid
+
+);
+
+    // Регистры конвейера
+    
+`protected
+    MTI!#,m\,[BQ]QR]D\wWvsooVz}<5be1'nNs7i[B;b7Zz;}c9BV+['iq9XC>n5Yr]no+YIBm{}QK
+    xGWAGCD1Z}l#J2QW-*DwC5isllZTXmaTA)G!C$w]}b!$gX=sA{TW?5ul$RI#HGV\<}ml_VEzm2E=
+    \AXn2=xlC~ExE}QBs^_'->Yv,=T+V@_Esu5U1]i+m\2,+QZIlz3>-o;op5*@O]_u\X5E'uI!lRT[
+    r)B\&\n,xjmrZjx7CO$iR|Ri>mv,O3>v=WHn,V-w]pe,uURA*{-R,#X*pU!^oY;DzrRKA56=;jnR
+    s{Ym]'\'n7Yl'X+rao'X*[@%Q@K[R?e*ux2@8^C\Qwj-}m'iE?]k#Bir>1OwuswK~e3JJ{*e=mwj
+    Bn,}>QG3X0~E\U^-QQ5UDnX$eDQXCVTXWXZrH+J*T[~]I}r1?>1~Yr51kEWt8m,!1^Enmh]Gn1bX
+    B=]k1s[7WuL}A{ZtA]=BruQlsHXuI@<-uj3_-R*z{B{n=u<xt7vaQ?sIWA-C;KU2$zCZszZE;9~n
+    TH%IA+I$@srZj,pKI5~*Jr'@U$G*liGV11r1G1z9I+{m-*IQOaKvO#BZF^CR{AXrGBGKRxJzx$jm
+    Dox+{Hn,\K>Xs0&z!!1^OUCQJ$wwE+rr7UXk>]<m=a^*Ax*aH@sQ_Jr=Gm2z}?U:'VRo*p#H?=tX
+    z\W~\!-^vJa~H)UO!vs,1$QsC<53o^2$CkB><]vY?KWxS,z$a\;UW1H}Jj_[V2oBT|ms3_!B^paS
+    \\Q\T}sV/,sR>x;\'#EVwj@Ip*7>vU-o[6G+<'A=[jI,[ijC1BVplRk{TEQ[ziiq)fQ+3J_WQ$Ur
+    B}*Upo[r3\,GDC4.=AvEvMunWIZ^=U$\\EN\n$KOKG@Jex[#*=5F=D~vCeW-~s#'rHul~n,~6HXJ
+    kzV\[M?'2C4kQ[_/7iYeoE}EPI[
+`endprotected
+endmodule
+`endif
+
+`ifdef VERSION_2
+module alu (
+
+    input logic        clk,
+    input logic        aresetn,
+
+    // AXI-Stream на вход
+    input  logic        s_tvalid,
+    output logic        s_tready,
+    input  logic [31:0] s_tdata,
+    input  logic [ 1:0] s_tid,
+
+    // AXI-Stream на выход
+    output logic        m_tvalid,
+    input  logic        m_tready,
+    output logic [31:0] m_tdata,
+    output logic [ 1:0] m_tid
+
+);
+
+    // Регистры конвейера
+    
+`protected
+    MTI!#DV~ZV-+7E@YTY'3k>*+5NB#=<e1'nNENFB;b"#1W[.,ICV}v[m<&hvO+rWwIJfiDe?P+v~-
+    oismJ[@KYVT[ZlGTDE-Ols?r@7R$j>mv{\*r5|C=^-^I!1,WD_D\]mYCuZpQvo'Yu,[#[}b='~@}
+    mRR|(*pZmv;@BNqHR-Z#rIIUD?^7]X7GGf*DjwBIX-\3Hx+Gp~i]{3VGTZEno!$]Ckw-,QQo>Y5T
+    DK&~=]'O\iuhuRXDE3K2a_*Hh{jYi~Eul+VpYC1Q@F=Ml"vnO3$mYs?]jl@$BG*2pY1e!A=R}vCz
+    ?@u}#p>D{ZQA-@:m&C$nu1_w{;s#a5~ITC}TxIiDKCaHnF*7k^l]2@KUE?oko2%"\~1iITI]DJ!U
+    ]-'K>n{e~sVx3R\1nswu]TJHcJ_X+rA}[YlkT-Y}J}AU<e$H{3{{eRO3ZV@AxxG'{VC!Jcap1QYB
+    >OC1sB[lX=x*#\1x]7mDWj5i*s1,k5y@IkB{TDaHGYrLG?ulKTsm5X~_Ii~#132X\,vvA$k!s_z<
+    w+CE[URZ'{pOev$+h-+X!=JC*o+3+BAVoh'SEZv\1HY-LIrRIr}DRt}DYDlRC?E3ua=;R<[r{-h!
+    xWofYWD;*~1Iz3uKw\nCL~YQz$RBU[!Tr77sY.AsC'B3J}^'n<oDK*^<2uI_,5xQA3'ee]2\RC;G
+    XpI^?]xBOx(j#Koa*Ks^oBVrg=A7Q'\eR<8!{Hp$oOw]GGBx@DA3e5Dp;R13N51aZW_*2+aOQr#_
+    xxEZDV=\'\3@1e!13UXVE]^mnRXErppvCO@]py/~5uY&fBRU5+v7[PTY]l,k11]HGx-vL<+ViYXZ
+    lQ{^B2C!HupT3\fJ'ZV]\eiuGs2^*k'>[z_4pxi'W&uCEJpykwQ,VVo+JRx[*}1_.vpZ[.B$'K;O
+    ?R
+`endprotected
+endmodule
+`endif
+
+`ifdef VERSION_3
+module alu (
+
+    input logic        clk,
+    input logic        aresetn,
+
+    // AXI-Stream на вход
+    input  logic        s_tvalid,
+    output logic        s_tready,
+    input  logic [31:0] s_tdata,
+    input  logic [ 1:0] s_tid,
+
+    // AXI-Stream на выход
+    output logic        m_tvalid,
+    input  logic        m_tready,
+    output logic [31:0] m_tdata,
+    output logic [ 1:0] m_tid
+
+);
+
+    // Регистры конвейера
+    
+`protected
+    MTI!#kCXBp$ep{zlGW^ijDH!\J}<5be1'nNp7i[B;b7ZR1}c9BV+['iq1W\X@{~[q5=ijH]!=O^m
+    ~ss+3UD1Z}l#J2QW-*DwC5isllZTXmaTA)G!C$w]}b!$gX=sA{TW?5ul$RI#HGV\<}ml_VEzm2E=
+    \AXn2=xlC~ExE}QBs^_'->Yv,=T+V@_Esu5U1]i+m\2,+QZIlz3>-o;op5*@O]_u\X5E'uI!lRT[
+    r)B\&\n,xjmrZjx7CO$iR|Ri>mv,O3>v=WHn,V-w]pe,uURA*{-R,#X*pU!^oY;DzrRKA56=;jnR
+    s{Ym]'\'n7Yl'X+rao'X*[@%Q@K[R?e*ux2@8^C\Qwj-}m'iE?]k#Bir>1OwuswK~e3JJ{*e=mwj
+    Bn,}>QG3X0~E\U^-QQ5UDnX$eDQXCVTXWXZrH+J*T[~]I}r1?>1~Yr51kEWt8m,!1^Enmh]Gn1bX
+    B=]k1s[7WuL}A{ZtA]=BruQlsHXuI@<-uj3_-R*z{B{n=u<xt7vaQ?sIWA-C;KU2$zCZszZE;9~n
+    TH%IA+I$@srZj,pKI5~*Jr'@U$G*liGV11r1G1z9I+{m-*IQOaKvO#BZF^CR{AXrGBGKRxJzx$jm
+    Dox+{Hn,\K>Xs0&z!!1^OUCQJ$wwE+rr7UXk>]<m=a^*Ax*aH@sQ_Jr=Gm2z}?U:'VRo*p#H?=tX
+    z\W~\!-^vJa~H)UO!vs,1$QsC<53o^2$CkB><]vY?KWxS,z$a\;UW1H}Jj_[V2oBT|ms3_!B^paS
+    \\Q\T}sV/,sR>x;\'#EVwj@Ip*7>ve-E[n}{Q}xEH*r]@G?51OTvi{'Ie%kTKvyIiz-v[+J{=\'O
+    <m1&^\!3>'7@A=-Xf_o^i[;^Tv'>'#+\Bz!Bj'Z[-^>Z|*Ee^bq$iG2N*l,<$V]5_iq0m+EE1s!x
+`endprotected
+endmodule
+`endif
+
+`ifdef VERSION_4
+module alu (
+
+    input logic        clk,
+    input logic        aresetn,
+
+    // AXI-Stream на вход
+    input  logic        s_tvalid,
+    output logic        s_tready,
+    input  logic [31:0] s_tdata,
+    input  logic [ 1:0] s_tid,
+
+    // AXI-Stream на выход
+    output logic        m_tvalid,
+    input  logic        m_tready,
+    output logic [31:0] m_tdata,
+    output logic [ 1:0] m_tid
+
+);
+
+    // Регистры конвейера
+    
+`protected
+    MTI!#E{A}$_^WYjK3Ka<_0GlIpB#=<e1'nNe"FB;b7ZzZ}c9-j\*PI]k!B<YBp@w*Ol[@Y}K[mCo
+    C'uo*oe\CDX-}@B}-\E-;|9z+n#Pww<??\?GLYZHEI?zByoxDHJD2Zo;D7!oO<T1+eJ]:+aeA'H>
+    I^+*OR]7;.-pKu\#7pe,OI[wI,{^;Hajl^gal#pHo\JiI>no$i#oQjiKDr<!l[iaIj{r=XDGR\,|
+    ~<_H[3Vj#j?re{B[{en-uDX=UUOV;R^QZ<wHU\KnP_T{rRH$$T=OY[@KQL~>QjEOvRpR{XZw>@2s
+    =2zYTsHj+sco-$2=\?r'2vo7?nG[<Y]$i]_\2xo[A*oGNar]QK]<BnIG~=ZW}MU}_]0J'I{G5--*
+    >!J2YwW;C1wZEevo2pR~}paKpH-6]{A,I6>XU'r<!Y?}iA:mv><6f1I!@IjBkUEmnrIxKv{IErEI
+    ^=Z2uI8GQW'i&H5O5Me,3[yaT;[/{aIe.zs~7)Pr\+U[xCi}>^vE^E[D1WIvl([x=IQZ7OQw]u$1
+    ?@${n12'J{tl5';YOk]#-rG2TQ<;AjoSDGkR;R\vsI+o1]1^_UTV=aY7_HQ~W=_THs*Rb$n>{@lU
+    WKa{oJBHCTY_ee#I^(_mTIT'wJs2R=]=A><$luKR[GwRp3swsnGxA3v=ADijoU!1+^+olj{\aTR{
+    veUBYU3jV_,++[ps,el,Zn++z*e}\vjZE~5wrZ:s3\Hc%Z];{Lg@H\YYT[QUVGBDpi!B'ssKR;5h
+    Vm{$>s7>av}IiwY@rjxJHD'}ITWz<s;JRz$5izX</rs,#uo_ar_x'(m*1!R-Qoq{pEx*E=A!UTn!
+    R~}zyw,~^Da{oxTm1VX,+QrsoO=YijY!xL(UzUOsvi5Y~[G7p@{xQE}r+GB\x*wurxuk*Iuq?]E"
+    CnZn-a3<
+`endprotected
+endmodule
+`endif
+
+`ifdef VERSION_5
+module alu (
+
+    input logic        clk,
+    input logic        aresetn,
+
+    // AXI-Stream на вход
+    input  logic        s_tvalid,
+    output logic        s_tready,
+    input  logic [31:0] s_tdata,
+    input  logic [ 1:0] s_tid,
+
+    // AXI-Stream на выход
+    output logic        m_tvalid,
+    input  logic        m_tready,
+    output logic [31:0] m_tdata,
+    output logic [ 1:0] m_tid
+
+);
+
+    // Регистры конвейера
+    
+`protected
+    MTI!#HGz*Esv{B3@\Z{npDWoeO!<5be1'nN}NFB;b"#'R[.,ICV}v[m<&hv\+rW5IWf!D1?P+V~n
+    &J=]wiTEmC&ZlGTDE-Ols?r@7R$j>mv{\*r5|C=^-^I!1,WD_D\]mYCuZpQvo'Yu,[#[}b='~@}m
+    RR|(*pZmv;@BNqHR-Z#rIIUD?^7]X7GGf*DjwBIX-\3Hx+Gp~i]{3VGTZEno!$]Ckw-,QQo>Y5TD
+    K&~=]'O\iuhuRXDE3K2a_*Hh{jYi~Eul+VpYC1Q@F=Ml"vnO3$mYs?]jl@$BG*2pY1e!A=R}vCz?
+    @u}#p>D{ZQA-@:m&C$nu1_w{;s#a5~ITC}TxIiDKCaHnF*7k^l]2@KUE?oko2%"\~1iITI]DJ!U]
+    -'K>n{e~sVx3R\1nswu]TJHcJ_X+rA}[YlkT-Y}J}AU<e$H{3{{eRO3ZV@AxxG'{VC!Jcap1QYB>
+    OC1sB[lX=x*#\1x]7mDWj5i*s1,k5y@IkB{TDaHGYrLG?ulKTsm5X~_Ii~#132X\,vvA$k!s_z<w
+    +CE[URZ'{pOev$+h-+X!=JC*o+3+BAVoh'SEZv\1HY-LIrRIr}DRt}DYDlRC?E3ua=;R<[]E-+l7
+    E*qP+G=ujuCZjaw^CZs23CmXTR*@Wnw!D}sX.AsATARV3:sv5Ol,+aI-s?85\7pJTZ~urHZD?X$D
+    kQ2IeY{zopG+R^B5\m^\*<=AIsO~$Q}D,,\?rXk$A[!DVe;iQx[zK{AwC-[^?_!?7G<(U]_>OCnX
+    =?;]2EkoGppv9~XW?E+I[[,TjB_'EeOe?j\^r_wZs7JEl\Hm]C[_~^@2l#'jw!raXr9R31CtwGjw
+    Caw'DWK2TC=2ZUD@!O]{0'oCWFsviW0ZsM=sT-zv[z1NO\?>DY=B^2p$|]1AHuY@U]kokw1**_{-
+    e\Q=[6=kWK?]<}
+`endprotected
+endmodule
+`endif
