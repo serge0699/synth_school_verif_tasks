@@ -9,7 +9,7 @@ module testbench;
     //    - bit [ 7:0] divider;                          
     //                                                   
     //  Опишите ограничения такие, что:                  
-    //    1) ~divider~ больше 0;                         
+    //    1) ~divident~ больше 0;                         
     //    2) ~divident~ делится на ~divider~ без остатка;
     //    3) ~divident~ больше ~divider~.                
 
