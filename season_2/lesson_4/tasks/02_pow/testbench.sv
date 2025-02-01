@@ -318,7 +318,7 @@ module testbench;
             // Иначе пришел сигнал сброса. Очищаем mailbox
             // от входящих транзакций, т.к все они будут
             // "выкинуты" из конвейера при приходе сигнала сброса
-            while(in_mbx.try_get(in_p)) cnt = cnt + 1;
+            while(in_mbx.try_get(in_p)) cnt = cnt + in_p.tlast;
         end
     endtask
 

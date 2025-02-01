@@ -19,7 +19,7 @@
                 join_any
                 disable fork;
                 if( done ) break;
-                while(in_mbx.try_get(tmp_p)) cnt = cnt + 1;
+                while(in_mbx.try_get(tmp_p)) cnt = cnt + tmp_p.tlast;
             end
         endtask
 
