@@ -169,8 +169,8 @@ initial begin
             $display("my_class_5.addr = %b", cl_5.addr);
         end
 
-        if( cl_5.req && !(cl_5.data inside {[100:200]}) ) begin
-            $error("my_class_5.req is 1 but my_class_5.data not inside [100:200]");
+        if( cl_5.req && !(cl_5.data inside {[128:200]}) ) begin
+            $error("my_class_5.req is 1 but my_class_5.data not inside [128:200]");
             $display("my_class_5.data = %0d", cl_5.data);
         end
 
