@@ -88,13 +88,14 @@ initial begin
 
         // 2
 
-        if( cl_2.data == 0 && (cl_2.addr != 128)) begin
-            $error("my_class_2.data == 0, but my_class_2.data != 128");
-            $display("my_class_2.data = %0d", cl_2.data);
-            $display("my_class_2.addr = %0d", cl_2.addr);
+        if( cl_2.data == 0 ) begin
+            if( cl_2.addr != 128 ) begin
+                $error("my_class_2.data == 0, but my_class_2.data != 128");
+                $display("my_class_2.data = %0d", cl_2.data);
+                $display("my_class_2.addr = %0d", cl_2.addr);
+            end
         end
-
-        if( $countones(cl_2.data) != 1 ) begin
+        else if( $countones(cl_2.data) != 1 ) begin
             $error("my_class_2.data is not power of 2");
             $display("my_class_2.data = %0d", cl_2.data);
         end
