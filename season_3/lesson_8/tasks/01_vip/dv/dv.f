@@ -1,0 +1,9 @@
++incdir+${EXAMPLE_DIR}/dv/tb/apb/
++incdir+${EXAMPLE_DIR}/dv/tb/axi4/
++incdir+${EXAMPLE_DIR}/dv/tb/array_alu/
+${EXAMPLE_DIR}/dv/tb/apb/apb_pkg.sv
+${EXAMPLE_DIR}/dv/tb/apb/apb_intf.sv
+${EXAMPLE_DIR}/dv/tb/axi4/axi4_pkg.sv
+${EXAMPLE_DIR}/dv/tb/axi4/axi4_intf.sv
+${EXAMPLE_DIR}/dv/tb/array_alu/array_alu_test_pkg.sv
+${EXAMPLE_DIR}/dv/tb/array_alu/testbench.sv
