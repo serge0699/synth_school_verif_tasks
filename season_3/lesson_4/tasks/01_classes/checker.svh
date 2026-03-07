@@ -69,9 +69,9 @@ initial begin
 
         // 1
 
-        if( !(cl_1.divident > 0) ) begin
-            $error("my_class_1.divident == 0");
-            $display("my_class_1.divident = %0d", cl_1.divident);
+        if( !(cl_1.divider > 0) ) begin
+            $error("my_class_1.divider == 0");
+            $display("my_class_1.divider = %0d", cl_1.divider);
         end
         
         if( !(cl_1.divident % cl_1.divider == 0) ) begin
