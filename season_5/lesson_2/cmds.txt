@@ -1,0 +1,133 @@
+git clone https://github.com/serge0699/synth_school_verif_tasks
+git pull
+cd synth_school_verif_tasks/season_5/lesson_2
+
+cd examples/
+make EXAMPLE=01_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=02_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=05_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=06_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=07_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=08_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=09_classes SIM_OPTS=-gui WAVES=0
+
+cd examples/
+make EXAMPLE=10_classes SIM_OPTS=-gui WAVES=0
+
+cd examples/
+make EXAMPLE=11_classes SIM_OPTS=-gui WAVES=0
+
+cd examples/
+make EXAMPLE=12_classes SIM_OPTS=-gui WAVES=0
+
+cd examples/
+make EXAMPLE=13_classes SIM_OPTS=-gui WAVES=0
+
+cd examples/
+make EXAMPLE=14_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=15_pow SIM_OPTS=-gui
+
+cd tasks/
+make EXAMPLE=02_pow SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=16_pow SIM_OPTS=-gui WITH_PKG=1 INTF=
+
+cd examples/
+make EXAMPLE=17_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=16_pow SIM_OPTS=-gui WITH_PKG=1 INTF=
+
+cd examples/
+make EXAMPLE=17_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd tasks/
+make EXAMPLE=03_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=35_mult WITH_PKG=1 EXAMPLE_REUSE=34_pow SIM_OPTS=-gui DUT=mult
+
+cd examples/
+make EXAMPLE=36_complex WITH_PKG=1 WAVES = 0 EXAMPLE_REUSE=34_pow SIM_OPTS=-gui DUT=complex
+
+cd examples/
+make EXAMPLE=18_sum SIM_OPTS=-gui COV=1
+
+cd examples/
+make EXAMPLE=18_sum SIM_OPTS=-gui COV=1
+
+cd examples/
+make EXAMPLE=19_sum SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=20_sum SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=21_sum SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=22_sum SIM_OPTS=-gui
+
+cd examples/
+make EXAMPLE=23_sum SIM_OPTS=-gui
+
+cd tasks/
+make EXAMPLE=04_sum SIM_OPTS="-gui -sv_seed 12345"
+
+cd tasks/
+make EXAMPLE=04_sum SIM_OPTS="-gui -sv_seed 12345"
+
+cd examples/
+make EXAMPLE=24_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=25_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=26_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=27_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=27_pow WITH_PKG=1 SIM_OPTS="-gui -noimmedassert"
+
+cd examples/
+make EXAMPLE=28_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=28_pow WITH_PKG=1 SIM_OPTS="-gui -noimmedassert"
+
+cd examples/
+make EXAMPLE=29_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=30_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=31_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=32_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=28_pow SIM_OPTS=-gui WITH_PKG=1
+
+cd examples/
+make EXAMPLE=33_pow SIM_OPTS=-gui WITH_PKG=1
+
